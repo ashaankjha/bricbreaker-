@@ -1,0 +1,14 @@
+{
+  "name": "Brick Surge",
+  "short_name": "Brick Surge",
+  "description": "A neon brick breaker with speed control, auto-boost and a fireball Power Mode.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#070a1c",
+  "theme_color": "#070a1c",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

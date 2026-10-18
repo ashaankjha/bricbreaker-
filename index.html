@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Brick Surge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="A neon brick breaker with speed control, auto-boost and a fireball Power Mode.">
+<meta name="theme-color" content="#070a1c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Tilt+Warp&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header class="hud">
+    <button id="btnPause" class="icon-btn" type="button" aria-label="Pause">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg>
+    </button>
+    <div class="score" aria-live="polite">
+      <div><span class="lbl">Level</span><span id="level">1</span></div>
+      <div><span class="lbl">Best</span><span id="best">0</span></div>
+    </div>
+    <button id="btnSound" class="icon-btn" type="button" aria-label="Mute sound" data-on="1">
+      <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+      <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
+    </button>
+  </header>
+
+  <main id="stage">
+    <canvas id="game" aria-label="Brick Surge playfield. Drag to aim, release to launch."></canvas>
+  </main>
+
+  <footer class="controls">
+    <button id="btnSpeed" class="ctl" type="button" data-level="0" aria-label="Change ball speed">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6l8 6-8 6V6zm9 0l8 6-8 6V6z"/></svg>
+      <b id="speedLbl">1×</b><small>Speed</small>
+    </button>
+    <button id="btnPower" class="ctl power" type="button" data-state="charging" aria-pressed="false" aria-label="Power mode">
+      <span class="ring" aria-hidden="true"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2L4 14h6.5L9 22l11-13h-6.8L13.5 2z"/></svg>
+      <b>POWER</b><small id="powerSub">0%</small>
+    </button>
+    <button id="btnRecall" class="ctl" type="button" disabled aria-label="Recall balls">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14"/></svg>
+      <b>Recall</b><small>Balls</small>
+    </button>
+  </footer>
+
+  <section id="menu" class="overlay" aria-labelledby="menuTitle">
+    <div class="card">
+      <h1 id="menuTitle" class="title"><span>Brick</span><span>Surge</span></h1>
+      <p class="tag">Aim · Launch · Surge</p>
+      <ul class="legend">
+        <li><i class="sw"><i class="sw-ball"></i></i><div><strong>+1 ball.</strong> <span>Fly through the ring to grow your volley.</span></div></li>
+        <li><i class="sw sw-power"><svg viewBox="0 0 24 24" fill="#2a1340" aria-hidden="true"><path d="M13.5 2L4 14h6.5L9 22l11-13h-6.8L13.5 2z"/></svg></i><div><strong>Power orb.</strong> <span>+20% charge. Full meter unlocks fireballs that pierce for 2× damage.</span></div></li>
+        <li><i class="sw sw-laser"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true"><path d="M1 12l5-4v3h12V8l5 4-5 4v-3H6v3z"/></svg></i><div><strong>Laser.</strong> <span>Every ball that touches it zaps its whole row or column.</span></div></li>
+        <li><i class="sw sw-bomb"></i><div><strong>Bomb brick.</strong> <span>Break it to blast the eight bricks around it.</span></div></li>
+      </ul>
+      <div class="actions">
+        <button id="btnPlay" class="btn primary" type="button"><span id="playLbl">Play</span></button>
+        <button id="btnNew" class="btn" type="button" hidden>New game</button>
+      </div>
+      <p class="keys">Keyboard: Space power · F speed · R recall · P pause</p>
+    </div>
+  </section>
+
+  <section id="pauseMenu" class="overlay" aria-labelledby="pauseTitle" hidden>
+    <div class="card">
+      <h2 id="pauseTitle">Paused</h2>
+      <div class="actions">
+        <button id="btnResume" class="btn primary" type="button">Resume</button>
+        <button id="btnSoundToggle" class="btn" type="button">Sound: on</button>
+        <button id="btnRestart" class="btn" type="button">Restart from level 1</button>
+        <button id="btnQuit" class="btn" type="button">Main menu</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="overMenu" class="overlay" aria-labelledby="overTitle" hidden>
+    <div class="card">
+      <h2 id="overTitle">Game over</h2>
+      <p id="overNote" class="note">A brick reached the launcher lane.</p>
+      <div class="stats">
+        <div class="stat"><span>Level</span><b id="overLevel">1</b></div>
+        <div class="stat best"><span>Best</span><b id="overBest">1</b></div>
+      </div>
+      <div class="actions">
+        <button id="btnAgain" class="btn primary" type="button">Play again</button>
+        <button id="btnOverMenu" class="btn" type="button">Main menu</button>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="game.js"></script>
+<script>
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  }
+</script>
+</body>
+</html>
