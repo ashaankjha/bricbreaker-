@@ -15,7 +15,7 @@ No build step and no dependencies: plain HTML, CSS and JavaScript on a `<canvas>
   - Laser (↔ / ↕): every ball that touches it zaps its whole row or column. Used lasers clear at the end of the turn.
   - Bomb brick (dashed outline): explodes into the eight bricks around it. Chain reactions are allowed.
   - Riveted bricks carry double health and add more power charge.
-- **Graphics.** Glowing brick sprites coloured by remaining health, ball trails, particle bursts, shockwaves, screen shake, laser beams and a fire vignette in Power Mode. Respects `prefers-reduced-motion`.
+- **Graphics.** A soft pastel look: peach-to-pink bricks shaded by remaining health (double-health bricks turn orchid and lavender), solid blue balls with see-through trails, mint rings, gentle drop shadows, debris bursts, shockwaves, screen shake, laser beams and a warm coral glow in Power Mode. Respects `prefers-reduced-motion`.
 - **Sound.** Synthesised with the Web Audio API, so there are no audio files. Toggle with the speaker button.
 - **Progress.** Your best level and the current run save automatically in the browser; reopen the game and choose **Continue**.
 - **Installable.** Includes a web app manifest and an offline service worker, so it can be added to a phone's home screen.

@@ -1,5 +1,5 @@
 // Offline cache for Brick Surge. Bump VERSION when shipping changes.
-const VERSION = 'brick-surge-v1';
+const VERSION = 'brick-surge-v2';
 const ASSETS = ['./', './index.html', './style.css', './game.js', './manifest.webmanifest', './icon.svg'];
 
 self.addEventListener('install', (e) => {
